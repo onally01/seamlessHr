@@ -86,17 +86,6 @@ class AuthRepository implements AuthInterface
 
     }
 
-    public function findById(int $id)
-    {
-        return $this->user::find($id);
-    }
-
-
-    public function findByColumn(array $params)
-    {
-        return $this->user::where($params);
-    }
-
     public function authUser(){
         return Auth::user();
     }
