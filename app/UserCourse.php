@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Course extends Model
+class UserCourse extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -12,6 +12,10 @@ class Course extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'lecturer', 'department',
+        'user_id', 'course_id'
     ];
+
+    public function course(){
+        return $this->belongsTo(Course::class);
+    }
 }

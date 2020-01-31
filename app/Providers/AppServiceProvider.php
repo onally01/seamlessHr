@@ -23,6 +23,26 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+
+        foreach ($this->models() as $model){
+            $this->app->bind(
+                "App\\Repositories\\$model\\$model" . "Interface",
+                "App\\Repositories\\$model\\$model" . "Repository"
+            );
+        }
+    }
+
+    /**
+     * Create array of models with repositories and interfaces
+     *
+     * @return array
+     */
+    public function models ()
+    {
+
+        return [
+            'Auth',
+            'Course'
+        ];
     }
 }
