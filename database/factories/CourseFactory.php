@@ -9,8 +9,6 @@ $factory->define(Course::class, function (Faker $faker) {
 
     $courses = json_decode(file_get_contents('data/courses.json',true),true);
 
-    Course::whereIn('name', $courses)->delete(); //because factory data are for test, im deleting existing records if any
-
     return [
         'name' => $faker->unique()->randomElement($courses),
         'lecturer' => $faker->name,

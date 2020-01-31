@@ -13,6 +13,7 @@ use App\Repositories\Course\CourseInterface;
 use App\Services\ResponseService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
 use Maatwebsite\Excel\Facades\Excel;
 
 class CourseController extends Controller
@@ -27,10 +28,20 @@ class CourseController extends Controller
 
     public function create()
     {
+        $checkCourse = $this->course->all();
+
+        if (count($checkCourse) >= 1){
+
+            $courseResource = CourseResource::collection($checkCourse);
+            return $this->responseService->getSuccessResource(['data' => $courseResource]);
+        }
+
         //Queue course factory
         dispatch(new CourseFactoryJob());
 
-        return $this->responseService->getSuccessResource();
+        $course = $this->course->all();
+
+        return $this->responseService->getSuccessResource(['data'=>CourseResource::collection($course)]);
     }
 
     public function register(CourseRegistrationRequest $request){
@@ -43,7 +54,12 @@ class CourseController extends Controller
                 'course_id' => $course
             ];
 
+            //Disable foreign key check so as to update pivot table
+            Schema::disableForeignKeyConstraints();
+
             $user->courses()->updateOrCreate($data);
+
+            Schema::enableForeignKeyConstraints();
         }
 
         return $this->responseService->getSuccessResource();
